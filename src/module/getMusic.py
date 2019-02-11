@@ -84,14 +84,14 @@ if __name__ == "__main__":
     play_url = 'http://music.163.com/playlist?id=393565693'  # 歌单-民谣还在路上
 
     s = requests.session()
-    s = BeautifulSoup(s.get(play_url, headers=headers).content,  'lxml')
+    s = BeautifulSoup(s.get(play_url, headers=headers).content, 'lxml')
     print(s)
     main = s.select('ul.f-hide li a')
     # for music in main:
-        # print(music)
-        # song_id = music['href'][music['href'].find('id=') + len('id='):]
-        #print('歌曲名称：{},歌曲Id：{}'.format(music.text, song_id))
-        #get_mp3(music.text, song_id)
+    # print(music)
+    # song_id = music['href'][music['href'].find('id=') + len('id='):]
+    # print('歌曲名称：{},歌曲Id：{}'.format(music.text, song_id))
+    # get_mp3(music.text, song_id)
 
     end_time = time.time()  # 结束时间
     print("程序耗时%f秒." % (end_time - start_time))

@@ -1,11 +1,7 @@
-
-from Crypto.Cipher import AES
 from bs4 import BeautifulSoup
-import base64
 import requests
-import urllib.request
-import os
 import time
+import os
 
 # 头部信息 #需根据自己浏览器的信息进行替换
 headers = {
@@ -15,31 +11,38 @@ headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
 }
 
-if __name__ == "__main__":
-    print('开始下载歌曲...\n================================================')
-    start_time = time.time()  # 开始时间
 
-    for artist_id in range(2000, 10000):
-        play_url = 'https://music.163.com/artist?id=' + str(artist_id)  # 歌单-民谣还在路上
-        print(play_url)
-        s = requests.session()
-        s = s.get(play_url, headers=headers)
-        s = BeautifulSoup(s.content,  'lxml')
-        # print(s)
-        nametext = s.select('h2')
-        if len(nametext) != 0:
-            print('歌手：{} 歌手Id：{}'.format(nametext[0].text, nametext[0].attrs['data-rid']))
-        else:
-            continue
-
+# 获取歌手信息
+def get_artist_info(artist_id):
+    artist_info = dict()
+    play_url = 'https://music.163.com/artist?id=' + str(artist_id)
+    print(play_url)
+    s = requests.session()
+    s = BeautifulSoup(s.get(play_url, headers=headers).content, 'lxml')
+    # print(s)
+    songs_info = dict()
+    nametext = s.select('h2')
+    if len(nametext) != 0:
+        print('歌手：{} 歌手Id：{}'.format(nametext[0].text, nametext[0].attrs['data-rid']))
         main = s.select('ul.f-hide li a')
         for music in main:
             # print(type(music))
             song_id = music['href'][music['href'].find('id=') + len('id='):]
-            print('歌曲名称：{},歌曲Id：{}'.format(music.text, song_id))
-            # get_mp3(music.text, song_id)
+            songs_info.update({music.text: song_id})
+            # print('歌曲名称：{},歌曲Id：{}'.format(music.text, song_id))
+        artist_info.update({artist_id: {nametext[0].text: songs_info}})
+    return songs_info
 
 
+if __name__ == "__main__":
+    print('开始下载歌曲...\n================================================')
+
+    start_time = time.time()  # 开始时间
+
+    for artist_id in range(2000, 2001):
+        test = get_artist_info(artist_id)
+        if len(test) != 0:
+            print(test)
 
     end_time = time.time()  # 结束时间
     print("程序耗时%f秒." % (end_time - start_time))
