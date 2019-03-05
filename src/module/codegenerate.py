@@ -15,14 +15,15 @@ def read_excel(filename, row, column):
     print(sheet)
 
     print(sheet.name, sheet.nrows, sheet.ncols)
-    rows = sheet.row_values(1)  # 获取行内容
+    rows = sheet.row_values(40)  # 获取行内容
     #cols = sheet.col_values(3)  # 获取列内容
 
     print(rows)
+    print("***")
 
     print(sheet.cell(1, 0).value)  # 获取表格里的内容，三种方式
     print(sheet.cell_value(1, 0))
-    print(sheet.row(1)[0].value)
+    print(sheet.row(4000)[0].value)
 
 
 if __name__ == "__main__":
